@@ -3,7 +3,7 @@ import Head from "next/head";
 
 import { NewsFeed } from "../components/NewsFeed";
 
-const Home: NextPage = () => {
+const Profile: NextPage = () => {
 
   return (
     <>
@@ -12,9 +12,12 @@ const Home: NextPage = () => {
         <meta name="description" content="KroTalk - A social media app" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <NewsFeed />
+      
+      <div className="mt-4">
+        Hello
+      </div>
     </>
   );
 };
 
-export default Home;
+export default Profile
