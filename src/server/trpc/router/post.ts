@@ -31,7 +31,7 @@ export const postRouter = router({
         limit: z.number().min(1).max(100).default(5),
         who: z
           .object({
-            email: z.string().optional(),
+            id: z.string().optional(),
           })
           .optional(),
       })

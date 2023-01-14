@@ -7,7 +7,7 @@ export default function NavBar() {
   const isLoggedIn = !!session?.user?.email
   const displayAuthButtons = status !== "loading"
 
-  const profileName = session?.user?.name
+  const id = session?.user?.id
 
   const logout = () => {
     signOut({ callbackUrl: "/" })
@@ -22,7 +22,7 @@ export default function NavBar() {
         <Link href="/" className="navBarButton">
           News Feed
         </Link>
-        <Link href={`/${profileName}`} className="navBarButton">
+        <Link href={`/${id}`} className="navBarButton">
           Profile
         </Link>
       </div>

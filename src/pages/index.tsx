@@ -3,6 +3,7 @@ import { useSession } from "next-auth/react"
 import Head from "next/head"
 import { useRouter } from "next/router"
 import { Container } from "../components/Container"
+import { CreatePost } from "../components/CreatePost"
 
 import { NewsFeed } from "../components/NewsFeed"
 
@@ -26,6 +27,7 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Container>
+        <CreatePost />
         <NewsFeed />
       </Container>
     </>

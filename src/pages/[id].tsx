@@ -23,7 +23,7 @@ const Profile: NextPage = () => {
     return null
   }
 
-  const email = router.query.name as string
+  const id = router.query.id as string
 
   return (
     <>
@@ -34,9 +34,11 @@ const Profile: NextPage = () => {
       </Head>
 
       <div>
-        <div className="">Profile</div>
+        <div className="m-auto my-10 max-w-4xl border-2 border-black">
+          Profile
+        </div>
         <Container>
-          <NewsFeed who={{ email }} />
+          <NewsFeed who={{ id }} />
         </Container>
       </div>
     </>

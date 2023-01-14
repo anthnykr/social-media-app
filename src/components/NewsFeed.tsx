@@ -61,7 +61,7 @@ function Post({
 
         <div className="ml-3 flex items-center">
           {post.author.name && (
-            <Link href={`/${post.author.email}`}> {post.author.name} </Link>
+            <Link href={`/${post.author.id}`}> {post.author.name} </Link>
           )}
         </div>
       </div>
@@ -102,7 +102,7 @@ function Post({
 export function NewsFeed({
   who = {},
 }: {
-  who: RouterInputs["post"]["newsfeed"]["who"]
+  who?: RouterInputs["post"]["newsfeed"]["who"]
 }) {
   const scrollPosition = useScrollPosition()
 
@@ -126,14 +126,11 @@ export function NewsFeed({
   }, [scrollPosition, hasNextPage, isFetching, fetchNextPage])
 
   return (
-    <div className="mt-10">
-      <CreatePost />
-      <div className="">
-        {posts.map((post) => {
-          return <Post key={post.id} post={post} />
-        })}
-        {!hasNextPage && <p className="mb-5">You ran out of posts to view!</p>}
-      </div>
+    <div className="">
+      {posts.map((post) => {
+        return <Post key={post.id} post={post} />
+      })}
+      {!hasNextPage && <p className="mb-5">You ran out of posts to view!</p>}
     </div>
   )
 }
