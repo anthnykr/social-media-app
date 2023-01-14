@@ -1,37 +1,43 @@
-import { signIn, signOut, useSession } from "next-auth/react";
-import Link from "next/link";
+import { signIn, signOut, useSession } from "next-auth/react"
+import Link from "next/link"
 
 export default function NavBar() {
-  const { data: session, status } = useSession();
+  const { data: session, status } = useSession()
 
-  const isLoggedIn = !!session?.user?.email;
-  const displayAuthButtons = status !== "loading";
+  const isLoggedIn = !!session?.user?.email
+  const displayAuthButtons = status !== "loading"
 
-  const login = () => {
-    signIn("google", { callbackUrl: "/" });
-  };
+  const profileName = session?.user?.name
 
   const logout = () => {
-    signOut({ callbackUrl: "/" });
-  };
+    signOut({ callbackUrl: "/" })
+  }
 
   return (
     // add something to direct to login page if not logged in
-    <div className="flex justify-between items-center bg-black px-5 py-3 text-white w-screen">
-      <p>KroTalk</p>
-      
+    <div className="flex w-screen items-center justify-between bg-black px-5 py-3 text-white">
+      <p className="text-2xl font-semibold">KroTalk</p>
+
       <div className="flex items-center">
-        <Link href="/" className="navBarButton">News Feed</Link>
-        <Link href="/profile" className="navBarButton">Profile</Link>
+        <Link href="/" className="navBarButton">
+          News Feed
+        </Link>
+        <Link href={`/${profileName}`} className="navBarButton">
+          Profile
+        </Link>
       </div>
 
-      {!isLoggedIn && displayAuthButtons && (
-          <button onClick={login} className="navBarButton">Login</button>
-        )}
+      {isLoggedIn && displayAuthButtons && (
+        <button onClick={logout} className="navBarButton">
+          Logout
+        </button>
+      )}
 
-        {isLoggedIn && displayAuthButtons && (
-          <button onClick={logout} className="navBarButton">Logout</button>
-        )}
+      {!isLoggedIn && displayAuthButtons && (
+        <div className="cursor-default px-12 py-3">
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </div>
+      )}
     </div>
   )
 }

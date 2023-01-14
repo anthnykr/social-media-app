@@ -2,8 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  font-family: 'Open Sans', sans-serif;
+}
+
 @layer components {
   .navBarButton {
-    @apply cursor-pointer bg-black text-white px-12 py-3 hover:bg-white hover:text-black
+    @apply cursor-pointer bg-black text-white px-12 py-3 hover:bg-white hover:text-black hover:underline hover:underline-offset-4
   }
 }

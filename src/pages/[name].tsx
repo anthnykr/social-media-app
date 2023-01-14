@@ -1,12 +1,17 @@
 import { type NextPage } from "next"
 import { useSession } from "next-auth/react"
 import Head from "next/head"
+import Image from "next/image"
 import { useRouter } from "next/router"
 import { Container } from "../components/Container"
-
 import { NewsFeed } from "../components/NewsFeed"
+import { trpc } from "../utils/trpc"
 
-const Home: NextPage = () => {
+const Profile: NextPage = () => {
+  const { data } = trpc.profile.profileInfo.useQuery()
+  const avatar = data?.image || ""
+  const userName = data?.name || ""
+
   const { data: session, status } = useSession()
 
   const router = useRouter()
@@ -18,6 +23,8 @@ const Home: NextPage = () => {
     return null
   }
 
+  const email = router.query.name as string
+
   return (
     <>
       <Head>
@@ -25,11 +32,15 @@ const Home: NextPage = () => {
         <meta name="description" content="KroTalk - A social media app" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Container>
-        <NewsFeed />
-      </Container>
+
+      <div>
+        <div className="">Profile</div>
+        <Container>
+          <NewsFeed who={{ email }} />
+        </Container>
+      </div>
     </>
   )
 }
 
-export default Home
+export default Profile
