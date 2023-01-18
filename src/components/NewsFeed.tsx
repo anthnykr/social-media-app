@@ -1,10 +1,12 @@
 import Image from "next/image"
 import { useEffect, useState } from "react"
 import { RouterInputs, RouterOutputs, trpc } from "../utils/trpc"
-import { CreatePost } from "./CreatePost"
 import { AiOutlineLike, AiFillLike } from "react-icons/ai"
 import Link from "next/link"
-import { useSession } from "next-auth/react"
+import dayjs from "dayjs"
+import relativeTime from "dayjs/plugin/relativeTime"
+
+dayjs.extend(relativeTime)
 
 function useScrollPosition() {
   const [scrollPosition, setScrollPosition] = useState(0)
@@ -44,7 +46,7 @@ function Post({
 
   return (
     <div className="mb-4 flex flex-col rounded-md border-2 border-black p-4">
-      <div className="flex">
+      <div className="flex items-center">
         <div>
           {post.author.image && (
             <Link href={`/${post.author.name}`}>
@@ -59,11 +61,12 @@ function Post({
           )}
         </div>
 
-        <div className="ml-3 flex items-center">
+        <div className="ml-2 flex items-center font-semibold">
           {post.author.name && (
             <Link href={`/${post.author.id}`}> {post.author.name} </Link>
           )}
         </div>
+        <p className="pl-1 text-sm">- {dayjs(post.createdAt).fromNow()}</p>
       </div>
 
       <div className="my-5">{post.text}</div>

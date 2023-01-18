@@ -1,9 +1,21 @@
 import { type NextPage } from "next"
-import { signIn } from "next-auth/react"
+import { signIn, useSession } from "next-auth/react"
 import Head from "next/head"
+import { useRouter } from "next/router"
 import { Container } from "../components/Container"
 
 const Login: NextPage = () => {
+  const { data: session, status } = useSession()
+
+  const router = useRouter()
+
+  if (status === "loading") return null
+
+  if (session) {
+    router.push("/")
+    return null
+  }
+
   const googleLogin = () => {
     signIn("google", { callbackUrl: "/" })
   }

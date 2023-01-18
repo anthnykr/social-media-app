@@ -47,11 +47,11 @@ model User {
   email         String?   @unique
   emailVerified DateTime?
   image         String?
+  bio           String?   @default("Add a bio here...")
   accounts      Account[]
   sessions      Session[]
   posts         Post[]
   likes         Like[]
-  profile       Profile[]
 }
 
 model VerificationToken {
@@ -82,12 +82,4 @@ model Like {
   updatedAt DateTime @updatedAt
 
   @@unique([postId, userId])
-}
-
-model Profile {
-  id         String @id @default (cuid())
-  bio        String?
-  avatar     String
-  user       User   @relation(fields: [userId], references: [id])
-  userId     String
 }

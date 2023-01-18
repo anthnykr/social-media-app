@@ -14,7 +14,6 @@ export default function NavBar() {
   }
 
   return (
-    // add something to direct to login page if not logged in
     <div className="flex w-screen items-center justify-between bg-black px-5 py-3 text-white">
       <p className="text-2xl font-semibold">KroTalk</p>
 
