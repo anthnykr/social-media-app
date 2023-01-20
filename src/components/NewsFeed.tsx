@@ -5,6 +5,7 @@ import { AiOutlineLike, AiFillLike } from "react-icons/ai"
 import Link from "next/link"
 import dayjs from "dayjs"
 import relativeTime from "dayjs/plugin/relativeTime"
+import LoadingNF from "./LoadingNF"
 
 dayjs.extend(relativeTime)
 
@@ -38,11 +39,22 @@ function Post({
 }: {
   post: RouterOutputs["post"]["newsfeed"]["posts"][number]
 }) {
-  const [numLikes, setNumLikes] = useState(post._count.likes)
-  const [hasLiked, setHasLiked] = useState(post.likes.length)
+  const numLikes = post._count.likes
+  const hasLiked = post.likes.length > 0
 
-  const likeMutation = trpc.post.like.useMutation().mutateAsync
-  const unlikeMutation = trpc.post.unlike.useMutation().mutateAsync
+  const utils = trpc.useContext()
+
+  const likePost = trpc.post.like.useMutation({
+    onSuccess: () => {
+      utils.post.newsfeed.invalidate()
+    },
+  }).mutate
+
+  const unlikePost = trpc.post.unlike.useMutation({
+    onSuccess: () => {
+      utils.post.newsfeed.invalidate()
+    },
+  }).mutate
 
   return (
     <div className="mb-4 flex flex-col rounded-md border-2 border-black p-4">
@@ -81,20 +93,16 @@ function Post({
           <button
             className="flex items-center gap-2 p-2 hover:bg-gray-200"
             onClick={() => {
-              if (hasLiked > 0) {
-                unlikeMutation({ postId: post.id })
-                setNumLikes(numLikes - 1)
-                setHasLiked(0)
+              if (hasLiked) {
+                unlikePost({ postId: post.id })
               } else {
-                likeMutation({ postId: post.id })
-                setNumLikes(numLikes + 1)
-                setHasLiked(1)
+                likePost({ postId: post.id })
               }
             }}
           >
             Like
-            {hasLiked > 0 && <AiFillLike size={24} />}
-            {!(hasLiked > 0) && <AiOutlineLike size={24} />}
+            {hasLiked && <AiFillLike size={24} />}
+            {!hasLiked && <AiOutlineLike size={24} />}
           </button>
         </div>
       </div>
@@ -109,7 +117,7 @@ export function NewsFeed({
 }) {
   const scrollPosition = useScrollPosition()
 
-  const { data, hasNextPage, fetchNextPage, isFetching } =
+  const { data, hasNextPage, fetchNextPage, isFetching, isLoading } =
     trpc.post.newsfeed.useInfiniteQuery(
       {
         limit: 5,
@@ -129,11 +137,19 @@ export function NewsFeed({
   }, [scrollPosition, hasNextPage, isFetching, fetchNextPage])
 
   return (
-    <div className="">
-      {posts.map((post) => {
-        return <Post key={post.id} post={post} />
-      })}
+    <>
+      {isLoading ? (
+        <>
+          <LoadingNF />
+          <LoadingNF />
+          <LoadingNF />
+        </>
+      ) : (
+        posts.map((post) => {
+          return <Post key={post.id} post={post} />
+        })
+      )}
       {!hasNextPage && <p className="mb-5">You ran out of posts to view!</p>}
-    </div>
+    </>
   )
 }

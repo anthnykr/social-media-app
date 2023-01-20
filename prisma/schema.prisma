@@ -42,16 +42,19 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(cuid())
+  id            String          @id @default(cuid())
   name          String?
-  email         String?   @unique
+  email         String?         @unique
   emailVerified DateTime?
   image         String?
-  bio           String?   @default("Add a bio here...")
+  bio           String?         @default("Add a bio here...")
   accounts      Account[]
   sessions      Session[]
   posts         Post[]
   likes         Like[]
+  reqsSent      FriendRequest[] @relation("reqSender")
+  reqsReceived  FriendRequest[] @relation("reqReceiver")
+  friends       Friend[]
 }
 
 model VerificationToken {
@@ -82,4 +85,22 @@ model Like {
   updatedAt DateTime @updatedAt
 
   @@unique([postId, userId])
+}
+
+model FriendRequest {
+  id         String   @id @default(cuid())
+  sender     User     @relation(name: "reqSender", fields: [senderId], references: [id])
+  senderId   String
+  receiver   User     @relation(name: "reqReceiver", fields: [receiverId], references: [id])
+  receiverId String
+  createdAt  DateTime @default(now())
+
+  @@unique([senderId, receiverId])
+}
+
+model Friend {
+  id       String @id @default(cuid())
+  friend   User   @relation(fields: [friendId], references: [id])
+  friendId String
+  createdAt DateTime @default(now())
 }
