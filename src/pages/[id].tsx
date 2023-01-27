@@ -4,7 +4,8 @@ import Head from "next/head"
 import Image from "next/image"
 import { useRouter } from "next/router"
 import { useState } from "react"
-import { Container } from "../components/Container"
+import Card from "../components/Card"
+import Container from "../components/Container"
 import { NewsFeed } from "../components/NewsFeed"
 import Spinner from "../components/Spinner"
 import { trpc } from "../utils/trpc"
@@ -19,6 +20,10 @@ const Profile: NextPage = () => {
   const avatar = data?.image || ""
   const userName = data?.name || ""
   const bio = data?.bio || ""
+
+  const { data: friendData } = trpc.friend.checkFriendship.useQuery()
+  const friendList = friendData?.friends
+  console.log(friendList)
 
   // Mutation to update the bio
   const utils = trpc.useContext()
@@ -70,27 +75,15 @@ const Profile: NextPage = () => {
   const editAvatar = () => {}
 
   return (
-    <>
-      <Head>
-        <title>KroTalk</title>
-        <meta name="description" content="KroTalk - A social media app" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      <div>
-        <div className="m-auto my-10 grid max-w-4xl grid-cols-[200px_auto] grid-rows-[40%_60%] rounded-md border-2 border-black p-10">
-          <div className="row-span-2 space-y-2">
-            <Image
-              src={avatar}
-              alt=""
-              width={200}
-              height={200}
-              className="border-2 border-gray-500"
-            />
+    <div>
+      <Card>
+        <div className="my-10 rounded-lg shadow-lg">
+          <div>
+            <Image src={avatar} alt="" width={200} height={200} />
             {userProfile && (
-              <form className="w-full">
+              <form>
                 <button
-                  className={`editButton w-full ${
+                  className={`editButton ${
                     showTextarea && `hover:bg-gray-300`
                   }`}
                   onClick={editAvatar}
@@ -101,10 +94,10 @@ const Profile: NextPage = () => {
               </form>
             )}
             {userProfile && (
-              <form className="w-full">
+              <form>
                 <button
                   type="button"
-                  className={`editButton w-full ${
+                  className={`editButton ${
                     showTextarea && `hover:bg-gray-300`
                   }`}
                   onClick={editBio}
@@ -116,8 +109,8 @@ const Profile: NextPage = () => {
             )}
           </div>
 
-          <div className="">
-            <div className="flex h-full w-full items-center justify-between pl-[60px] pr-[40px]">
+          <div>
+            <div>
               <div>
                 <p className="text-3xl font-semibold">{userName}</p>
                 <p className="text-gray-600">0 Friends</p>
@@ -128,7 +121,7 @@ const Profile: NextPage = () => {
             </div>
           </div>
 
-          <div className="h-full w-full pl-[60px] pr-[40px]">
+          <div>
             {loading ? (
               <Spinner />
             ) : showTextarea ? (
@@ -137,14 +130,14 @@ const Profile: NextPage = () => {
                   onChange={(e) => {
                     setTempBio(e.target.value)
                   }}
-                  className="rounded-md border-2 border-gray-400 p-2"
+                  className="rounded-lg border-2 border-gray-400 p-2"
                   value={tempBio}
                   placeholder={bio}
                 />
                 <div className="space-x-3">
                   <button
                     type="button"
-                    className="editButton w-[20%]"
+                    className="editButton"
                     onClick={cancelEdit}
                     disabled={loading}
                   >
@@ -152,7 +145,7 @@ const Profile: NextPage = () => {
                   </button>
                   <button
                     type="button"
-                    className="editButton w-[20%]"
+                    className="editButton"
                     onClick={updateBio}
                     disabled={loading}
                   >
@@ -165,12 +158,14 @@ const Profile: NextPage = () => {
             )}
           </div>
         </div>
+      </Card>
 
+      <div>
         <Container>
           <NewsFeed who={{ id }} />
         </Container>
       </div>
-    </>
+    </div>
   )
 }
 

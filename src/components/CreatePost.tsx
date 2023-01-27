@@ -16,26 +16,25 @@ export function CreatePost() {
 
   const utils = trpc.useContext()
 
-  const { mutateAsync } = trpc.post.create.useMutation({
+  const createPost = trpc.post.create.useMutation({
     onSuccess: () => {
       setText("")
       utils.post.newsfeed.invalidate()
     },
   })
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
     try {
       postSchema.parse({ text })
+      await createPost.mutateAsync({ text })
     } catch (error) {
       if (error instanceof z.ZodError) {
         console.log(error)
       }
       return
     }
-
-    mutateAsync({ text })
   }
 
   return (

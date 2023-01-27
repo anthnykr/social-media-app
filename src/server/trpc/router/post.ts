@@ -10,16 +10,12 @@ export const postRouter = router({
       const { prisma, session } = ctx
       const { text } = input
 
-      const userId = session.user.id
+      const authorId = session.user.id
 
-      return prisma.post.create({
+      return await prisma.post.create({
         data: {
           text,
-          author: {
-            connect: {
-              id: userId,
-            },
-          },
+          authorId,
         },
       })
     }),
@@ -105,18 +101,10 @@ export const postRouter = router({
 
       const userId = session.user.id
 
-      return prisma.like.create({
+      return await prisma.like.create({
         data: {
-          post: {
-            connect: {
-              id: postId,
-            },
-          },
-          user: {
-            connect: {
-              id: userId,
-            },
-          },
+          postId,
+          userId,
         },
       })
     }),
@@ -133,7 +121,7 @@ export const postRouter = router({
 
       const userId = session.user.id
 
-      return prisma.like.delete({
+      return await prisma.like.delete({
         where: {
           postId_userId: {
             postId,

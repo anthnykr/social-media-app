@@ -38,7 +38,7 @@ export const profileRouter = router({
 
       const userId = session.user.id
 
-      return prisma.user.update({
+      return await prisma.user.update({
         where: {
           id: userId,
         },

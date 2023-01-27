@@ -2,11 +2,9 @@ import { type NextPage } from "next"
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/router"
 import Card from "../components/Card"
-import { CreatePost } from "../components/CreatePost"
+import PageLayout from "../components/PageLayout"
 
-import { NewsFeed } from "../components/NewsFeed"
-
-const Home: NextPage = () => {
+const FriendRequests: NextPage = () => {
   const { data: session, status } = useSession()
 
   const router = useRouter()
@@ -19,15 +17,10 @@ const Home: NextPage = () => {
   }
 
   return (
-    <>
-      <Card className="">
-        <CreatePost />
-      </Card>
-      <Card className="mt-6">
-        <NewsFeed />
-      </Card>
-    </>
+    <PageLayout>
+      <Card>Hello</Card>
+    </PageLayout>
   )
 }
 
-export default Home
+export default FriendRequests

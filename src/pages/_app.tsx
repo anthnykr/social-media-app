@@ -13,8 +13,8 @@ const MyApp: AppType<{ session: Session | null }> = ({
 }) => {
   return (
     <SessionProvider session={session}>
+      <NavBar />
       <main>
-        <NavBar />
         <Component {...pageProps} />
       </main>
     </SessionProvider>

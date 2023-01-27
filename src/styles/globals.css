@@ -2,16 +2,23 @@
 @tailwind components;
 @tailwind utilities;
 
-html {
-  font-family: 'Open Sans', sans-serif;
+@layer base {
+  html {
+    font-family: 'Open Sans', sans-serif;
+  }
+}
+
+html,
+body {
+  @apply bg-gray-50
 }
 
 @layer components {
-  .navBarButton {
-    @apply cursor-pointer bg-black text-white px-12 py-3 hover:underline hover:underline-offset-4
-  }
-
   .editButton {
     @apply cursor-pointer bg-gray-300 border-2 border-gray-500 text-sm rounded-md px-1 py-1 hover:bg-gray-400
+  }
+
+  .navItem {
+    @apply flex text-sm items-center gap-3 cursor-pointer px-3 py-2 hover:underline hover:underline-offset-4
   }
 }

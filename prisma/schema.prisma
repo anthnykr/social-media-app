@@ -42,19 +42,20 @@ model Session {
 }
 
 model User {
-  id            String          @id @default(cuid())
-  name          String?
-  email         String?         @unique
-  emailVerified DateTime?
-  image         String?
-  bio           String?         @default("Add a bio here...")
-  accounts      Account[]
-  sessions      Session[]
-  posts         Post[]
-  likes         Like[]
-  reqsSent      FriendRequest[] @relation("reqSender")
-  reqsReceived  FriendRequest[] @relation("reqReceiver")
-  friends       Friend[]
+  id              String          @id @default(cuid())
+  name            String?
+  email           String?         @unique
+  emailVerified   DateTime?
+  image           String?
+  bio             String?         @default("Add a bio here...")
+  accounts        Account[]
+  sessions        Session[]
+  posts           Post[]
+  likes           Like[]
+  reqsSent        FriendRequest[] @relation("reqSender")
+  reqsReceived    FriendRequest[] @relation("reqReceiver")
+  friends         User[]          @relation("friends")
+  friendsRelation User[]          @relation("friends")
 }
 
 model VerificationToken {
@@ -89,6 +90,7 @@ model Like {
 
 model FriendRequest {
   id         String   @id @default(cuid())
+  accepted   Boolean  @default(false)
   sender     User     @relation(name: "reqSender", fields: [senderId], references: [id])
   senderId   String
   receiver   User     @relation(name: "reqReceiver", fields: [receiverId], references: [id])
@@ -96,11 +98,4 @@ model FriendRequest {
   createdAt  DateTime @default(now())
 
   @@unique([senderId, receiverId])
-}
-
-model Friend {
-  id       String @id @default(cuid())
-  friend   User   @relation(fields: [friendId], references: [id])
-  friendId String
-  createdAt DateTime @default(now())
 }
