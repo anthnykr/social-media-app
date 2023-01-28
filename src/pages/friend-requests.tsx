@@ -2,7 +2,6 @@ import { type NextPage } from "next"
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/router"
 import Card from "../components/Card"
-import PageLayout from "../components/PageLayout"
 
 const FriendRequests: NextPage = () => {
   const { data: session, status } = useSession()
@@ -16,11 +15,7 @@ const FriendRequests: NextPage = () => {
     return null
   }
 
-  return (
-    <PageLayout>
-      <Card>Hello</Card>
-    </PageLayout>
-  )
+  return <Card>Hello</Card>
 }
 
 export default FriendRequests

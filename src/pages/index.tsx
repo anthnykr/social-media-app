@@ -5,6 +5,7 @@ import Card from "../components/Card"
 import { CreatePost } from "../components/CreatePost"
 
 import { NewsFeed } from "../components/NewsFeed"
+import PageLayout from "../components/PageLayout"
 
 const Home: NextPage = () => {
   const { data: session, status } = useSession()
@@ -19,14 +20,14 @@ const Home: NextPage = () => {
   }
 
   return (
-    <>
-      <Card className="">
+    <PageLayout>
+      <Card>
         <CreatePost />
       </Card>
-      <Card className="mt-6">
+      <Card>
         <NewsFeed />
       </Card>
-    </>
+    </PageLayout>
   )
 }
 

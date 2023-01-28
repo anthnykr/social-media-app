@@ -41,7 +41,7 @@ export function CreatePost() {
     <>
       <form
         onSubmit={handleSubmit}
-        className="mb-4 mt-10 flex w-full flex-col rounded-md border-2 border-black bg-gradient-to-br from-gray-300 to-gray-200 p-4"
+        className="mb-4 flex w-full flex-col rounded-md border-2 border-black bg-gradient-to-br from-gray-300 to-gray-200 p-4"
       >
         <textarea
           onChange={(e) => setText(e.target.value)}
@@ -51,7 +51,10 @@ export function CreatePost() {
         />
 
         <div className="mt-4 flex justify-end">
-          <button type="submit" className="navBarButton rounded-md">
+          <button
+            type="submit"
+            className="rounded-md bg-white px-3 py-2 shadow-md"
+          >
             Post
           </button>
         </div>

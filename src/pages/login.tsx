@@ -3,6 +3,7 @@ import { signIn, useSession } from "next-auth/react"
 import Head from "next/head"
 import { useRouter } from "next/router"
 import Card from "../components/Card"
+import PageLayout from "../components/PageLayout"
 
 const Login: NextPage = () => {
   const { data: session, status } = useSession()
@@ -29,7 +30,7 @@ const Login: NextPage = () => {
   }
 
   return (
-    <>
+    <PageLayout>
       <Card>
         <div className="mt-5 flex flex-col items-center justify-center rounded-lg border-2 border-black py-10 shadow-lg">
           <p className="mb-6 text-6xl font-semibold hover:underline hover:underline-offset-[10px]">
@@ -105,7 +106,7 @@ const Login: NextPage = () => {
           </button>
         </div>
       </Card>
-    </>
+    </PageLayout>
   )
 }
 

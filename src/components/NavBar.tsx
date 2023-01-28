@@ -8,6 +8,7 @@ import {
 } from "@fluentui/react-icons"
 import { signOut, useSession } from "next-auth/react"
 import Link from "next/link"
+import { useRouter } from "next/router"
 
 export default function NavBar() {
   const { data: session, status } = useSession()
@@ -15,42 +16,42 @@ export default function NavBar() {
   const isLoggedIn = !!session?.user?.email
   const displayNavButtons = status !== "loading"
 
-  const id = session?.user?.id
+  const id = useRouter().query.id
 
   const logout = () => {
-    signOut({ callbackUrl: "/" })
+    signOut({ callbackUrl: "/login" })
   }
 
   return (
-    <div className="fixed flex w-screen items-center justify-between bg-black px-5 py-3 text-white">
+    <div className="sticky flex w-screen items-center justify-between bg-black px-5 py-3 text-white">
       <p className="text-3xl font-semibold">KroTalk</p>
 
       {isLoggedIn && displayNavButtons && (
         <div className="flex">
-          <div className="navItem">
+          <Link href="/" className="navItem">
             <BroadActivityFeed20Filled />
             <span>News Feed</span>
-          </div>
+          </Link>
 
-          <div className="navItem">
-            <ChatHelp20Filled />
-            <span>Contact Us</span>
-          </div>
-
-          <div className="navItem">
+          <Link href={`/${id}`} className="navItem">
             <ContactCard20Filled />
             <span>My Profile</span>
-          </div>
+          </Link>
 
-          <div className="navItem">
+          <Link href="/my-friends" className="navItem">
             <People20Filled />
             <span>My Friends</span>
-          </div>
+          </Link>
 
-          <div className="navItem">
+          <Link href="/friend-requests" className="navItem">
             <PeopleAdd20Filled />
             <span>Friend Requests</span>
-          </div>
+          </Link>
+
+          <Link href="/contact-us" className="navItem">
+            <ChatHelp20Filled />
+            <span>Contact Us</span>
+          </Link>
 
           <button onClick={logout} className="navItem">
             <ArrowExit20Filled />
