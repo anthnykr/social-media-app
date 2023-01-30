@@ -41,13 +41,14 @@ export function CreatePost() {
     <>
       <form
         onSubmit={handleSubmit}
-        className="mb-4 flex w-full flex-col rounded-md border-2 border-black bg-gradient-to-br from-gray-300 to-gray-200 p-4"
+        className="flex w-full flex-col rounded-md border-2 border-black bg-gradient-to-br from-gray-300 to-gray-200 p-4"
       >
         <textarea
           onChange={(e) => setText(e.target.value)}
           className="w-full rounded-md border-2 border-black p-2 text-black"
           value={text}
-          placeholder="Create post..."
+          rows={5}
+          placeholder="Write post here..."
         />
 
         <div className="mt-4 flex justify-end">

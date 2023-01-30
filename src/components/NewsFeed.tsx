@@ -6,6 +6,7 @@ import Link from "next/link"
 import dayjs from "dayjs"
 import relativeTime from "dayjs/plugin/relativeTime"
 import LoadingNF from "./LoadingNF"
+import Card from "./Card"
 
 dayjs.extend(relativeTime)
 
@@ -41,6 +42,8 @@ function Post({
 }) {
   const numLikes = post._count.likes
   const hasLiked = post.likes.length > 0
+  const [showFullPost, setShowFullPost] = useState(false)
+  const showExpandButtons = post.text.length > 300
 
   const utils = trpc.useContext()
 
@@ -57,7 +60,7 @@ function Post({
   }).mutate
 
   return (
-    <div className="mb-4 flex flex-col rounded-md border-2 border-black p-4">
+    <Card className="xl:w-2/5">
       <div className="flex items-center">
         <div>
           {post.author.image && (
@@ -73,15 +76,36 @@ function Post({
           )}
         </div>
 
-        <div className="ml-2 flex items-center font-semibold">
+        <div className="ml-6 flex items-center font-semibold">
           {post.author.name && (
             <Link href={`/${post.author.id}`}> {post.author.name} </Link>
           )}
         </div>
-        <p className="pl-1 text-sm">- {dayjs(post.createdAt).fromNow()}</p>
+        <span className="pl-2 text-sm">-</span>
+        <span className="pl-2 text-sm">{dayjs(post.createdAt).fromNow()}</span>
       </div>
 
-      <div className="my-5">{post.text}</div>
+      <div className="my-6 flex flex-col gap-2">
+        {post.text.substring(0, 300) +
+          (showFullPost ? post.text.substring(300) : "")}
+        {!showFullPost && showExpandButtons ? (
+          <span
+            onClick={() => setShowFullPost(true)}
+            className="text-sm text-gray-500 hover:cursor-pointer"
+          >
+            Show more...
+          </span>
+        ) : showFullPost && showExpandButtons ? (
+          <span
+            onClick={() => setShowFullPost(false)}
+            className="text-sm text-gray-500 hover:cursor-pointer"
+          >
+            Show less...
+          </span>
+        ) : (
+          ""
+        )}
+      </div>
 
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
@@ -91,7 +115,7 @@ function Post({
         <div className="flex justify-end">
           {/* <p className="mr-4 p-2 hover:bg-gray-200">Comment</p> */}
           <button
-            className="flex items-center gap-2 p-2 hover:bg-gray-200"
+            className="flex items-center gap-2 hover:bg-gray-200"
             onClick={() => {
               if (hasLiked) {
                 unlikePost({ postId: post.id })
@@ -106,7 +130,7 @@ function Post({
           </button>
         </div>
       </div>
-    </div>
+    </Card>
   )
 }
 
@@ -149,7 +173,7 @@ export function NewsFeed({
           return <Post key={post.id} post={post} />
         })
       )}
-      {!hasNextPage && <p className="mb-5">You ran out of posts to view!</p>}
+      {!hasNextPage && <p className="my-5">You ran out of posts to view!</p>}
     </>
   )
 }

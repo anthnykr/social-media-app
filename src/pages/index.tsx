@@ -24,9 +24,7 @@ const Home: NextPage = () => {
       <Card>
         <CreatePost />
       </Card>
-      <Card>
-        <NewsFeed />
-      </Card>
+      <NewsFeed />
     </PageLayout>
   )
 }
