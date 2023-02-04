@@ -90,7 +90,6 @@ model Like {
 
 model FriendRequest {
   id         String   @id @default(cuid())
-  accepted   Boolean  @default(false)
   sender     User     @relation(name: "reqSender", fields: [senderId], references: [id])
   senderId   String
   receiver   User     @relation(name: "reqReceiver", fields: [receiverId], references: [id])

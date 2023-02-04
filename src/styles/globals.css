@@ -15,7 +15,7 @@ body {
 
 @layer components {
   .editButton {
-    @apply cursor-pointer bg-gray-300 border-2 border-gray-500 text-sm rounded-md px-1 py-1 hover:bg-gray-400
+    @apply cursor-pointer bg-gray-200 border border-gray-400 text-sm rounded-md px-1 py-1 hover:bg-gray-300 text-gray-500
   }
 
   .navItem {

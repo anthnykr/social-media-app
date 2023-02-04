@@ -1,11 +1,12 @@
 import { type NextPage } from "next"
 import { useSession } from "next-auth/react"
-import Head from "next/head"
 import Image from "next/image"
 import { useRouter } from "next/router"
 import { useState } from "react"
 import Card from "../components/Card"
+import FriendButton from "../components/FriendButton"
 import { NewsFeed } from "../components/NewsFeed"
+import PageLayout from "../components/PageLayout"
 import Spinner from "../components/Spinner"
 import { trpc } from "../utils/trpc"
 
@@ -19,10 +20,6 @@ const Profile: NextPage = () => {
   const avatar = data?.image || ""
   const userName = data?.name || ""
   const bio = data?.bio || ""
-
-  const { data: friendData } = trpc.friend.checkFriendship.useQuery()
-  const friendList = friendData?.friends
-  console.log(friendList)
 
   // Mutation to update the bio
   const utils = trpc.useContext()
@@ -74,49 +71,45 @@ const Profile: NextPage = () => {
   const editAvatar = () => {}
 
   return (
-    <div>
-      <Card>
-        <div className="my-10 rounded-lg shadow-lg">
-          <div>
-            <Image src={avatar} alt="" width={200} height={200} />
-            {userProfile && (
-              <form>
-                <button
-                  className={`editButton ${
-                    showTextarea && `hover:bg-gray-300`
-                  }`}
-                  onClick={editAvatar}
-                  disabled={showTextarea}
-                >
-                  Change Profile Picture
-                </button>
-              </form>
-            )}
-            {userProfile && (
-              <form>
-                <button
-                  type="button"
-                  className={`editButton ${
-                    showTextarea && `hover:bg-gray-300`
-                  }`}
-                  onClick={editBio}
-                  disabled={showTextarea}
-                >
-                  Edit Bio
-                </button>
-              </form>
-            )}
-          </div>
+    <PageLayout pageTitle="Profile">
+      <Card className="w-full gap-6 md:w-full lg:w-1/2 xl:flex-row">
+        <section className="space-y-2">
+          <Image src={avatar} alt="" width={200} height={200} />
+          {userProfile && (
+            <form>
+              <button
+                className={`editButton w-full ${
+                  showTextarea && `hover:bg-gray-300`
+                }`}
+                onClick={editAvatar}
+                disabled={showTextarea}
+              >
+                Change Avatar
+              </button>
+            </form>
+          )}
+          {userProfile && (
+            <form>
+              <button
+                type="button"
+                className={`editButton w-full ${
+                  showTextarea && `hover:bg-gray-300`
+                }`}
+                onClick={editBio}
+                disabled={showTextarea}
+              >
+                Edit Bio
+              </button>
+            </form>
+          )}
+          {!userProfile && <FriendButton profileId={id} />}
+        </section>
 
-          <div>
+        <section className="flex w-full flex-col gap-6">
+          <div className="flex w-full items-center gap-40">
             <div>
-              <div>
-                <p className="text-3xl font-semibold">{userName}</p>
-                <p className="text-gray-600">0 Friends</p>
-              </div>
-              {!userProfile && (
-                <button className="navBarButton">Add Friend</button>
-              )}
+              <p className="text-3xl font-semibold">{userName}</p>
+              <p className="text-gray-600">0 Friends</p>
             </div>
           </div>
 
@@ -129,19 +122,12 @@ const Profile: NextPage = () => {
                   onChange={(e) => {
                     setTempBio(e.target.value)
                   }}
-                  className="rounded-lg border-2 border-gray-400 p-2"
+                  className="w-full rounded-md border border-gray-300 p-2"
                   value={tempBio}
-                  placeholder={bio}
+                  rows={4}
+                  placeholder="Write something about yourself..."
                 />
-                <div className="space-x-3">
-                  <button
-                    type="button"
-                    className="editButton"
-                    onClick={cancelEdit}
-                    disabled={loading}
-                  >
-                    Cancel
-                  </button>
+                <div className="space-x-2">
                   <button
                     type="button"
                     className="editButton"
@@ -150,21 +136,25 @@ const Profile: NextPage = () => {
                   >
                     Save
                   </button>
+                  <button
+                    type="button"
+                    className="editButton"
+                    onClick={cancelEdit}
+                    disabled={loading}
+                  >
+                    Cancel
+                  </button>
                 </div>
               </div>
             ) : (
               <p>{bio}</p>
             )}
           </div>
-        </div>
+        </section>
       </Card>
 
-      <div>
-        <Card>
-          <NewsFeed who={{ id }} />
-        </Card>
-      </div>
-    </div>
+      <NewsFeed who={{ id }} />
+    </PageLayout>
   )
 }
 

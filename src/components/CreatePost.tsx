@@ -39,22 +39,19 @@ export function CreatePost() {
 
   return (
     <>
-      <form
-        onSubmit={handleSubmit}
-        className="flex w-full flex-col rounded-md border-2 border-black bg-gradient-to-br from-gray-300 to-gray-200 p-4"
-      >
+      <form onSubmit={handleSubmit} className="flex w-full flex-col gap-6">
         <textarea
           onChange={(e) => setText(e.target.value)}
-          className="w-full rounded-md border-2 border-black p-2 text-black"
+          className="w-full rounded-md border border-gray-300 p-2"
           value={text}
           rows={5}
           placeholder="Write post here..."
         />
 
-        <div className="mt-4 flex justify-end">
+        <div className="flex justify-end">
           <button
             type="submit"
-            className="rounded-md bg-white px-3 py-2 shadow-md"
+            className="rounded-md bg-white px-3 py-2 shadow-md hover:shadow-lg"
           >
             Post
           </button>

@@ -20,7 +20,7 @@ const Home: NextPage = () => {
   }
 
   return (
-    <PageLayout>
+    <PageLayout pageTitle="KroTalk">
       <Card>
         <CreatePost />
       </Card>

@@ -13,10 +13,9 @@ import { useRouter } from "next/router"
 export default function NavBar() {
   const { data: session, status } = useSession()
 
+  const id = session?.user?.id
   const isLoggedIn = !!session?.user?.email
   const displayNavButtons = status !== "loading"
-
-  const id = useRouter().query.id
 
   const logout = () => {
     signOut({ callbackUrl: "/login" })

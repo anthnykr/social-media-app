@@ -64,7 +64,7 @@ function Post({
       <div className="flex items-center">
         <div>
           {post.author.image && (
-            <Link href={`/${post.author.name}`}>
+            <Link href={`/${post.author.id}`}>
               <Image
                 src={post.author.image}
                 alt=""
@@ -76,7 +76,7 @@ function Post({
           )}
         </div>
 
-        <div className="ml-6 flex items-center font-semibold">
+        <div className="ml-3 flex items-center font-semibold">
           {post.author.name && (
             <Link href={`/${post.author.id}`}> {post.author.name} </Link>
           )}
