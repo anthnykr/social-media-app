@@ -113,7 +113,6 @@ function FriendButton({ profileId }: Props) {
           Add Friend
         </button>
       )}
-      <Toaster />
     </>
   )
 }

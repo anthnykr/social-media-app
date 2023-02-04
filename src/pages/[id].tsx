@@ -68,6 +68,7 @@ const Profile: NextPage = () => {
     setLoading(false)
   }
 
+  // to do: change avatar feature
   const editAvatar = () => {}
 
   return (

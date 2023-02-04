@@ -98,3 +98,12 @@ model FriendRequest {
 
   @@unique([senderId, receiverId])
 }
+
+model contactUs {
+  id        String   @id @default(cuid())
+  firstName String
+  lastName  String
+  email     String
+  message   String
+  createdAt DateTime @default(now())
+}
