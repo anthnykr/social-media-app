@@ -20,7 +20,7 @@ export default function NavBar() {
   const logout = () => {
     signOut({ callbackUrl: "/login" })
   }
-
+  // TODO: make nav bar a dropdown menu when using a small screen
   return (
     <div className="sticky flex w-screen items-center justify-between bg-black px-5 py-3 text-white">
       <p className="text-3xl font-semibold">KroTalk</p>

@@ -122,7 +122,8 @@ export const friendRouter = router({
     const friendRelationList = userFriends?.friendsRelation.map(
       (friend) => friend.id
     )
-    return { friendList, friendRelationList }
+
+    return { friendList, friendRelationList, userFriends }
   }),
 
   getFriendRequests: protectedProcedure.query(async ({ ctx }) => {
