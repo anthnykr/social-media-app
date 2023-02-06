@@ -48,5 +48,25 @@ export const profileRouter = router({
       })
     }),
 
-  // updateAvatar: protectedProcedure
+  updateAvatar: protectedProcedure
+    .input(
+      z.object({
+        newAvatar: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { prisma, session } = ctx
+      const { newAvatar } = input
+
+      const userId = session.user.id
+
+      return await prisma.user.update({
+        where: {
+          id: userId,
+        },
+        data: {
+          image: newAvatar,
+        },
+      })
+    }),
 })

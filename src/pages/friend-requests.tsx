@@ -3,12 +3,28 @@ import { useSession } from "next-auth/react"
 import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/router"
+import { toast } from "react-hot-toast"
 import Card from "../components/Card"
 import PageLayout from "../components/PageLayout"
 import { trpc } from "../utils/trpc"
 
 const FriendRequests: NextPage = () => {
   const { data } = trpc.friend.getFriendRequests.useQuery()
+
+  const utils = trpc.useContext()
+
+  // To accept a friend request
+  const acceptFriend = trpc.friend.acceptFriend.useMutation({
+    onSuccess: () => {
+      utils.friend.getFriendRequests.invalidate()
+    },
+  })
+  // To decline a friend request
+  const declineFriend = trpc.friend.declineFriend.useMutation({
+    onSuccess: () => {
+      utils.friend.getFriendRequests.invalidate()
+    },
+  })
 
   const { data: session, status } = useSession()
 
@@ -21,30 +37,102 @@ const FriendRequests: NextPage = () => {
     return null
   }
 
+  const acceptFriendButton = async ({
+    requestId,
+    profileId,
+  }: {
+    requestId: string
+    profileId: string
+  }) => {
+    try {
+      if (!requestId) {
+        toast.error("Something went wrong.")
+        return
+      } else {
+        await acceptFriend.mutateAsync({
+          requestId,
+          senderId: profileId,
+        })
+        toast.success("Friend request accepted.")
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const declineFriendButton = async ({ requestId }: { requestId: string }) => {
+    try {
+      if (!requestId) {
+        toast.error("This user has not sent you a request.")
+        return
+      } else {
+        await declineFriend.mutateAsync({
+          requestId,
+        })
+        toast.success("Friend request declined.")
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   return (
-    // TODO: add accept and decline friend request buttons, also add a heading
     <PageLayout pageTitle="Friend Requests">
       <Card className="w-full gap-6 md:w-full lg:w-1/2">
+        <div className="space-y-2">
+          <h1 className="text-2xl font-semibold">Friend Requests</h1>
+          <p className="text-gray-500">
+            Here you can see all your friend requests and accept or decline
+            them.
+          </p>
+        </div>
+        <hr />
         {data?.map((friendRequest, index) => {
           return (
             <>
-              <div className="flex items-center gap-6">
-                {friendRequest.senderAvatar && (
+              <div className="flex justify-between">
+                <div className="flex items-center gap-6">
+                  {friendRequest.senderAvatar && (
+                    <Link href={`/${friendRequest.senderId}`}>
+                      <Image
+                        alt="Profile Picture"
+                        src={friendRequest.senderAvatar}
+                        width={36}
+                        height={36}
+                        className="rounded-full"
+                      />
+                    </Link>
+                  )}
                   <Link href={`/${friendRequest.senderId}`}>
-                    <Image
-                      alt="Profile Picture"
-                      src={friendRequest.senderAvatar}
-                      width={36}
-                      height={36}
-                      className="rounded-full"
-                    />
+                    <span className="font-semibold">
+                      {friendRequest.senderName}
+                    </span>
                   </Link>
-                )}
-                <Link href={`/${friendRequest.senderId}`}>
-                  <span className="font-semibold">
-                    {friendRequest.senderName}
-                  </span>
-                </Link>
+                </div>
+
+                <div className="space-x-6">
+                  <button
+                    type="button"
+                    className="editButton"
+                    onClick={() =>
+                      acceptFriendButton({
+                        requestId: friendRequest.id,
+                        profileId: friendRequest.senderId,
+                      })
+                    }
+                  >
+                    Accept Friend
+                  </button>
+                  <button
+                    type="button"
+                    className="editButton"
+                    onClick={() =>
+                      declineFriendButton({ requestId: friendRequest.id })
+                    }
+                  >
+                    Decline Friend
+                  </button>
+                </div>
               </div>
               {index + 1 !== data.length && <hr />}
             </>
