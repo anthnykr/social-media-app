@@ -68,25 +68,39 @@ const Profile: NextPage = () => {
     setLoading(false)
   }
 
-  // to do: change avatar feature
-  const editAvatar = () => {}
+  // TODO: change avatar feature
+  const editAvatar = (target: HTMLInputElement) => {
+    const newAvatar = target.files?.[0]
+    console.log(newAvatar)
+  }
 
   return (
     <PageLayout pageTitle="Profile">
       <Card className="w-full gap-6 md:w-full lg:w-1/2 xl:flex-row">
         <section className="space-y-2">
-          <Image src={avatar} alt="" width={200} height={200} />
+          <div className="h-[200px] w-[200px]">
+            <Image src={avatar} alt="" width={200} height={200} />
+          </div>
           {userProfile && (
             <form>
-              <button
-                className={`editButton w-full ${
-                  showTextarea && `hover:bg-gray-300`
+              <label
+                className={`editButton inline-block w-full text-center ${
+                  showTextarea && `cursor-not-allowed hover:bg-gray-200`
                 }`}
-                onClick={editAvatar}
-                disabled={showTextarea}
+                htmlFor="changeAvatar"
               >
                 Change Avatar
-              </button>
+              </label>
+              <input
+                type="file"
+                id="changeAvatar"
+                className={`editButton hidden w-full ${
+                  showTextarea && `cursor-not-allowed hover:bg-gray-200`
+                }`}
+                accept="image/png, image/jpeg"
+                onChange={(event) => editAvatar(event.target)}
+                disabled={showTextarea}
+              />
             </form>
           )}
           {userProfile && (
@@ -94,7 +108,7 @@ const Profile: NextPage = () => {
               <button
                 type="button"
                 className={`editButton w-full ${
-                  showTextarea && `hover:bg-gray-300`
+                  showTextarea && `cursor-not-allowed hover:bg-gray-200`
                 }`}
                 onClick={editBio}
                 disabled={showTextarea}
@@ -111,6 +125,7 @@ const Profile: NextPage = () => {
             <div>
               <p className="text-3xl font-semibold">{userName}</p>
               <p className="text-gray-600">0 Friends</p>
+              {/* TODO: get number of friends */}
             </div>
           </div>
 
@@ -119,6 +134,7 @@ const Profile: NextPage = () => {
               <Spinner />
             ) : showTextarea ? (
               <div className="flex flex-col gap-2">
+                {/* TODO: add a character limit and warning that says when the user is trying to type extra */}
                 <textarea
                   onChange={(e) => {
                     setTempBio(e.target.value)
