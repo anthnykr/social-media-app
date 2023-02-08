@@ -3,6 +3,7 @@ import { useSession } from "next-auth/react"
 import Image from "next/image"
 import { useRouter } from "next/router"
 import { useState } from "react"
+import { toast } from "react-hot-toast"
 import Card from "../components/Card"
 import FriendButton from "../components/FriendButton"
 import { NewsFeed } from "../components/NewsFeed"
@@ -64,7 +65,13 @@ const Profile: NextPage = () => {
   // Updates the bio in the database
   const updateBio = async () => {
     setLoading(true)
-    await bioMutation({ newBio: tempBio })
+
+    try {
+      await bioMutation({ newBio: tempBio })
+      toast.success("Bio updated")
+    } catch (error) {
+      toast.error("Error updating bio")
+    }
     setLoading(false)
   }
 
@@ -76,7 +83,7 @@ const Profile: NextPage = () => {
 
   return (
     <PageLayout pageTitle="Profile">
-      <Card className="w-full gap-6 md:w-full lg:w-1/2 xl:flex-row">
+      <Card className="w-full gap-6 xl:flex-row">
         <section className="space-y-2">
           <div className="h-[200px] w-[200px]">
             <Image src={avatar} alt="" width={200} height={200} />
@@ -84,8 +91,8 @@ const Profile: NextPage = () => {
           {userProfile && (
             <form>
               <label
-                className={`editButton inline-block w-full text-center ${
-                  showTextarea && `cursor-not-allowed hover:bg-gray-200`
+                className={`blueButton inline-block w-full py-1 text-center ${
+                  showTextarea && `cursor-not-allowed hover:bg-blue-400`
                 }`}
                 htmlFor="changeAvatar"
               >
@@ -94,9 +101,7 @@ const Profile: NextPage = () => {
               <input
                 type="file"
                 id="changeAvatar"
-                className={`editButton hidden w-full ${
-                  showTextarea && `cursor-not-allowed hover:bg-gray-200`
-                }`}
+                className="hidden"
                 accept="image/png, image/jpeg"
                 onChange={(event) => editAvatar(event.target)}
                 disabled={showTextarea}
@@ -107,7 +112,7 @@ const Profile: NextPage = () => {
             <form>
               <button
                 type="button"
-                className={`editButton w-full ${
+                className={`redButton w-full py-1 ${
                   showTextarea && `cursor-not-allowed hover:bg-gray-200`
                 }`}
                 onClick={editBio}
@@ -134,20 +139,20 @@ const Profile: NextPage = () => {
               <Spinner />
             ) : showTextarea ? (
               <div className="flex flex-col gap-2">
-                {/* TODO: add a character limit and warning that says when the user is trying to type extra */}
                 <textarea
                   onChange={(e) => {
                     setTempBio(e.target.value)
                   }}
                   className="w-full rounded-md border border-gray-300 p-2"
                   value={tempBio}
-                  rows={4}
+                  rows={5}
+                  maxLength={300}
                   placeholder="Write something about yourself..."
                 />
                 <div className="space-x-2">
                   <button
                     type="button"
-                    className="editButton"
+                    className="blueButton px-2 py-1"
                     onClick={updateBio}
                     disabled={loading}
                   >
@@ -155,7 +160,7 @@ const Profile: NextPage = () => {
                   </button>
                   <button
                     type="button"
-                    className="editButton"
+                    className="redButton px-2 py-1"
                     onClick={cancelEdit}
                     disabled={loading}
                   >

@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { toast } from "react-hot-toast"
 import { z } from "zod"
 import { trpc } from "../utils/trpc"
 
@@ -8,7 +9,7 @@ export const postSchema = z.object({
       required_error: "Post text is required",
     })
     .min(1)
-    .max(1000),
+    .max(2000),
 })
 
 export function CreatePost() {
@@ -30,10 +31,7 @@ export function CreatePost() {
       postSchema.parse({ text })
       await createPost.mutateAsync({ text })
     } catch (error) {
-      if (error instanceof z.ZodError) {
-        console.log(error)
-      }
-      return
+      toast.error("Error creating post")
     }
   }
 

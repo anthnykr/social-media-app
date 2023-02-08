@@ -14,11 +14,15 @@ body {
 }
 
 @layer components {
-  .editButton {
-    @apply cursor-pointer bg-gray-200 border border-gray-400 text-sm rounded-md px-1 py-1 hover:bg-gray-300 text-gray-500
+  .blueButton {
+    @apply cursor-pointer rounded-md bg-blue-400 text-gray-50 hover:bg-blue-500
+  }
+
+  .redButton {
+    @apply cursor-pointer rounded-md bg-red-400 text-gray-50 hover:bg-red-500
   }
 
   .navItem {
-    @apply flex text-sm items-center gap-3 cursor-pointer px-3 py-2 hover:underline hover:underline-offset-4
+    @apply flex items-center gap-3 cursor-pointer px-3 py-2 hover:underline hover:underline-offset-4
   }
 }

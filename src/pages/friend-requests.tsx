@@ -56,7 +56,7 @@ const FriendRequests: NextPage = () => {
         toast.success("Friend request accepted.")
       }
     } catch (error) {
-      console.log(error)
+      toast.error("Something went wrong.")
     }
   }
 
@@ -72,13 +72,13 @@ const FriendRequests: NextPage = () => {
         toast.success("Friend request declined.")
       }
     } catch (error) {
-      console.log(error)
+      toast.error("Something went wrong.")
     }
   }
 
   return (
     <PageLayout pageTitle="Friend Requests">
-      <Card className="w-full gap-6 md:w-full lg:w-1/2">
+      <Card className="w-full gap-6">
         <div className="space-y-2">
           <h1 className="text-2xl font-semibold">Friend Requests</h1>
           <p className="text-gray-500">
@@ -113,7 +113,7 @@ const FriendRequests: NextPage = () => {
                 <div className="space-x-6">
                   <button
                     type="button"
-                    className="editButton"
+                    className="blueButton px-3 py-2"
                     onClick={() =>
                       acceptFriendButton({
                         requestId: friendRequest.id,
@@ -125,7 +125,7 @@ const FriendRequests: NextPage = () => {
                   </button>
                   <button
                     type="button"
-                    className="editButton"
+                    className="redButton px-3 py-2"
                     onClick={() =>
                       declineFriendButton({ requestId: friendRequest.id })
                     }

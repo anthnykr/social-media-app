@@ -2,7 +2,6 @@ import { ErrorMessage } from "@hookform/error-message"
 import classNames from "classnames"
 import { type NextPage } from "next"
 import { useSession } from "next-auth/react"
-import { useRouter } from "next/router"
 import { useForm } from "react-hook-form"
 import { toast } from "react-hot-toast"
 import Card from "../components/Card"
@@ -28,7 +27,6 @@ const ContactUs: NextPage = () => {
   })
 
   const { data: session, status } = useSession()
-  const router = useRouter()
   if (status === "loading") return null
 
   const onSubmit = async (data: contactUs) => {
@@ -36,18 +34,35 @@ const ContactUs: NextPage = () => {
       await submitMessage.mutateAsync(data)
       toast.success("Message submitted successfully.")
     } catch (error) {
-      console.log(error)
+      toast.error("Something went wrong. Please try again.")
     }
   }
 
   return (
     <PageLayout pageTitle="Profile">
-      <Card className="w-full gap-6 md:w-full lg:w-1/2 xl:flex-row">
+      <Card className="w-full gap-6 xl:flex-row">
         <form onSubmit={handleSubmit(onSubmit)} className="w-full">
           <>
             <div className="flex w-full gap-6">
               <div className="mb-6 w-full">
-                <FormLabel htmlFor={"firstName"}>First Name</FormLabel>
+                <div className="flex w-full justify-between">
+                  <FormLabel htmlFor={"firstName"}>First Name</FormLabel>
+                  <ErrorMessage
+                    errors={errors}
+                    name={"firstName"}
+                    render={({ messages }) =>
+                      messages &&
+                      Object.entries(messages).map(([type, message]) => (
+                        <p
+                          className="text-sm font-medium text-red-500"
+                          key={type}
+                        >
+                          {message}
+                        </p>
+                      ))
+                    }
+                  />
+                </div>
                 <input
                   className={classNames(
                     "mt-1 w-full rounded-lg border p-2 shadow",
@@ -59,25 +74,27 @@ const ContactUs: NextPage = () => {
                     required: "Required",
                   })}
                 />
-                <ErrorMessage
-                  errors={errors}
-                  name={"firstName"}
-                  render={({ messages }) =>
-                    messages &&
-                    Object.entries(messages).map(([type, message]) => (
-                      <p
-                        className="absolute text-sm font-medium text-red-500"
-                        key={type}
-                      >
-                        {message}
-                      </p>
-                    ))
-                  }
-                />
               </div>
 
               <div className="mb-6 w-full">
-                <FormLabel htmlFor={"lastName"}>Last Name</FormLabel>
+                <div className="flex w-full justify-between">
+                  <FormLabel htmlFor={"lastName"}>Last Name</FormLabel>
+                  <ErrorMessage
+                    errors={errors}
+                    name={"lastName"}
+                    render={({ messages }) =>
+                      messages &&
+                      Object.entries(messages).map(([type, message]) => (
+                        <p
+                          className="text-sm font-medium text-red-500"
+                          key={type}
+                        >
+                          {message}
+                        </p>
+                      ))
+                    }
+                  />
+                </div>
                 <input
                   className={classNames(
                     "mt-1 w-full rounded-lg border p-2 shadow",
@@ -89,14 +106,20 @@ const ContactUs: NextPage = () => {
                     required: "Required",
                   })}
                 />
+              </div>
+            </div>
+
+            <div className="mb-6 w-full">
+              <div className="flex w-full justify-between">
+                <FormLabel htmlFor={"email"}>Email Address</FormLabel>
                 <ErrorMessage
                   errors={errors}
-                  name={"lastName"}
+                  name={"email"}
                   render={({ messages }) =>
                     messages &&
                     Object.entries(messages).map(([type, message]) => (
                       <p
-                        className="absolute text-sm font-medium text-red-500"
+                        className="text-sm font-medium text-red-500"
                         key={type}
                       >
                         {message}
@@ -105,10 +128,6 @@ const ContactUs: NextPage = () => {
                   }
                 />
               </div>
-            </div>
-
-            <div className="mb-6 w-full">
-              <FormLabel htmlFor={"email"}>Email Address</FormLabel>
               <input
                 className={classNames(
                   "mt-1 w-full rounded-lg border p-2 shadow",
@@ -125,25 +144,27 @@ const ContactUs: NextPage = () => {
                   required: "Required",
                 })}
               />
-              <ErrorMessage
-                errors={errors}
-                name={"email"}
-                render={({ messages }) =>
-                  messages &&
-                  Object.entries(messages).map(([type, message]) => (
-                    <p
-                      className="absolute text-sm font-medium text-red-500"
-                      key={type}
-                    >
-                      {message}
-                    </p>
-                  ))
-                }
-              />
             </div>
 
             <div className="mb-6 w-full">
-              <FormLabel htmlFor={"message"}>Message</FormLabel>
+              <div className="flex w-full justify-between">
+                <FormLabel htmlFor={"message"}>Message</FormLabel>
+                <ErrorMessage
+                  errors={errors}
+                  name={"message"}
+                  render={({ messages }) =>
+                    messages &&
+                    Object.entries(messages).map(([type, message]) => (
+                      <p
+                        className="text-sm font-medium text-red-500"
+                        key={type}
+                      >
+                        {message}
+                      </p>
+                    ))
+                  }
+                />
+              </div>
               <textarea
                 className={classNames(
                   "mt-1 w-full rounded-lg border p-2 shadow",
@@ -156,27 +177,9 @@ const ContactUs: NextPage = () => {
                   required: "Required",
                 })}
               />
-              <ErrorMessage
-                errors={errors}
-                name={"message"}
-                render={({ messages }) =>
-                  messages &&
-                  Object.entries(messages).map(([type, message]) => (
-                    <p
-                      className="absolute text-sm font-medium text-red-500"
-                      key={type}
-                    >
-                      {message}
-                    </p>
-                  ))
-                }
-              />
             </div>
 
-            <button
-              type="submit"
-              className="rounded-md bg-black py-2 px-3 text-white"
-            >
+            <button type="submit" className="blueButton py-2 px-3">
               Submit support request
             </button>
           </>

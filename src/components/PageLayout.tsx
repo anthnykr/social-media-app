@@ -16,7 +16,9 @@ const PageLayout = ({ children, className, pageTitle }: Props) => {
       </Head>
 
       <NavBar />
-      <div className={`flex w-full flex-col items-center ${className}`}>
+      <div
+        className={`absolute mt-[64px] flex w-full flex-col items-center ${className}`}
+      >
         {children}
       </div>
     </>

@@ -39,13 +39,13 @@ const MyFriends: NextPage = () => {
       await deleteFriend.mutateAsync({ profileId })
       toast.success("Friend deleted.")
     } catch (error) {
-      console.log(error)
+      toast.error("Something went wrong.")
     }
   }
 
   return (
     <PageLayout pageTitle="My Friends">
-      <Card className="w-full gap-6 md:w-full lg:w-1/2">
+      <Card className="gap-6">
         <div className="space-y-2">
           <h1 className="text-2xl font-semibold">My Friends</h1>
           <p className="text-gray-500">
@@ -77,7 +77,7 @@ const MyFriends: NextPage = () => {
 
                 <button
                   type="button"
-                  className="editButton"
+                  className="redButton px-3 py-2"
                   onClick={() => deleteFriendButton({ profileId: friend.id })}
                 >
                   Delete Friend
@@ -87,18 +87,35 @@ const MyFriends: NextPage = () => {
             </>
           )
         })}
-        {acceptedFriends.map((friend) => {
+        {acceptedFriends.map((friend, index) => {
           return (
             <>
-              {friend.image && (
-                <Image
-                  alt="Profile Picture"
-                  src={friend.image}
-                  width={36}
-                  height={36}
-                />
-              )}
-              {friend.name}
+              <div className="flex justify-between">
+                <div className="flex items-center gap-6">
+                  {friend.image && (
+                    <Link href={`/${friend.id}`}>
+                      <Image
+                        alt="Profile Picture"
+                        src={friend.image}
+                        width={36}
+                        height={36}
+                      />
+                    </Link>
+                  )}
+                  <Link href={`/${friend.id}`}>
+                    <span className="font-semibold">{friend.name}</span>
+                  </Link>
+                </div>
+
+                <button
+                  type="button"
+                  className="editButton"
+                  onClick={() => deleteFriendButton({ profileId: friend.id })}
+                >
+                  Delete Friend
+                </button>
+              </div>
+              {index + 1 !== addedFriends.length && <hr />}
             </>
           )
         })}

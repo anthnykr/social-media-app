@@ -55,61 +55,83 @@ function FriendButton({ profileId }: Props) {
   })
 
   const addFriendButton = async () => {
-    await addFriend.mutateAsync({ receiverId: profileId })
-    toast.success("Friend request sent.")
+    try {
+      await addFriend.mutateAsync({ receiverId: profileId })
+      toast.success("Friend request sent.")
+    } catch (error) {
+      toast.error("Something went wrong.")
+    }
   }
 
   const acceptFriendButton = async () => {
-    if (!requestId) {
+    try {
+      if (!requestId) {
+        toast.error("Something went wrong.")
+        return
+      } else {
+        await acceptFriend.mutateAsync({
+          requestId,
+          senderId: profileId,
+        })
+        toast.success("Friend request accepted.")
+      }
+    } catch (error) {
       toast.error("Something went wrong.")
-      return
-    } else {
-      await acceptFriend.mutateAsync({
-        requestId,
-        senderId: profileId,
-      })
-      toast.success("Friend request accepted.")
     }
   }
 
   const declineFriendButton = async () => {
-    if (!requestId) {
-      toast.error("This user has not sent you a request.")
-      return
-    } else {
-      await declineFriend.mutateAsync({
-        requestId,
-      })
-      toast.success("Friend request declined.")
+    try {
+      if (!requestId) {
+        toast.error("This user has not sent you a request.")
+        return
+      } else {
+        await declineFriend.mutateAsync({
+          requestId,
+        })
+        toast.success("Friend request declined.")
+      }
+    } catch (error) {
+      toast.error("Something went wrong.")
     }
   }
 
   const deleteFriendButton = async () => {
-    await deleteFriend.mutateAsync({ profileId })
-    toast.success("Friend deleted.")
+    try {
+      await deleteFriend.mutateAsync({ profileId })
+      toast.success("Friend deleted.")
+    } catch (error) {
+      toast.error("Something went wrong.")
+    }
   }
 
   return (
     <>
       {friendStatus ? (
-        <button className="editButton w-full" onClick={deleteFriendButton}>
+        <button className="redButton w-full py-1" onClick={deleteFriendButton}>
           Delete Friend
         </button>
       ) : reqHasBeenReceived ? (
         <>
-          <button className="editButton w-full" onClick={acceptFriendButton}>
+          <button
+            className="blueButton w-full py-1"
+            onClick={acceptFriendButton}
+          >
             Accept Friend
           </button>
-          <button className="editButton w-full" onClick={declineFriendButton}>
+          <button
+            className="redButton w-full py-1"
+            onClick={declineFriendButton}
+          >
             Decline Friend
           </button>
         </>
       ) : reqHasBeenSent ? (
-        <button className="editButton w-full" disabled>
+        <button className="blueButton w-full py-1" disabled>
           Request Pending
         </button>
       ) : (
-        <button className="editButton w-full" onClick={addFriendButton}>
+        <button className="blueButton w-full py-1" onClick={addFriendButton}>
           Add Friend
         </button>
       )}

@@ -135,11 +135,12 @@ export const postRouter = router({
     .input(
       z.object({
         comment: z.string(),
+        postId: z.string(),
       })
     )
     .mutation(async ({ ctx, input }) => {
       const { prisma, session } = ctx
-      const { comment } = input
+      const { comment, postId } = input
 
       const userId = session.user.id
 
@@ -147,6 +148,70 @@ export const postRouter = router({
         data: {
           text: comment,
           authorId: userId,
+          postId: postId,
+        },
+      })
+    }),
+
+  getComments: protectedProcedure
+    .input(
+      z.object({
+        postId: z.string(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const { prisma } = ctx
+      const { postId } = input
+
+      const comments = await prisma.comment.findMany({
+        orderBy: [
+          {
+            createdAt: "desc",
+          },
+        ],
+        where: {
+          postId,
+        },
+
+        include: {
+          author: {
+            select: {
+              id: true,
+              name: true,
+              image: true,
+            },
+          },
+        },
+      })
+
+      return comments
+    }),
+
+  deletePost: protectedProcedure
+    .input(
+      z.object({
+        postId: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { prisma } = ctx
+      const { postId } = input
+
+      await prisma.like.deleteMany({
+        where: {
+          postId,
+        },
+      })
+
+      await prisma.comment.deleteMany({
+        where: {
+          postId,
+        },
+      })
+
+      return await prisma.post.delete({
+        where: {
+          id: postId,
         },
       })
     }),
