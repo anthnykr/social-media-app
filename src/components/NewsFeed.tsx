@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
-import { RouterInputs, trpc } from "../utils/trpc"
+import { trpc } from "../utils/trpc"
+import type { RouterInputs } from "../utils/trpc"
 import LoadingNF from "./LoadingNF"
 import Post from "./Post"
 
@@ -64,7 +65,7 @@ export function NewsFeed({
         </>
       ) : (
         posts.map((post) => {
-          return <Post post={post} />
+          return <Post post={post} key={post.id} />
         })
       )}
       {!hasNextPage && <p className="my-5">You ran out of posts to view!</p>}

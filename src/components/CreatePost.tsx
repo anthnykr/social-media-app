@@ -1,16 +1,7 @@
 import { useState } from "react"
 import { toast } from "react-hot-toast"
-import { z } from "zod"
+import { postSchema } from "../types/post.schema"
 import { trpc } from "../utils/trpc"
-
-export const postSchema = z.object({
-  text: z
-    .string({
-      required_error: "Post text is required",
-    })
-    .min(1)
-    .max(2000),
-})
 
 export function CreatePost() {
   const [text, setText] = useState("")

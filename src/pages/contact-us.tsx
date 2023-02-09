@@ -7,7 +7,7 @@ import { toast } from "react-hot-toast"
 import Card from "../components/Card"
 import FormLabel from "../components/FormLabel"
 import PageLayout from "../components/PageLayout"
-import { contactUs } from "../types/contactUs.schema"
+import type { contactUs } from "../types/contactUs.schema"
 import { trpc } from "../utils/trpc"
 
 const ContactUs: NextPage = () => {
@@ -26,7 +26,7 @@ const ContactUs: NextPage = () => {
     },
   })
 
-  const { data: session, status } = useSession()
+  const { status } = useSession()
   if (status === "loading") return null
 
   const onSubmit = async (data: contactUs) => {

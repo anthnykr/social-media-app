@@ -1,6 +1,5 @@
 import { type NextPage } from "next"
 import { signIn, useSession } from "next-auth/react"
-import Head from "next/head"
 import { useRouter } from "next/router"
 import Card from "../components/Card"
 import PageLayout from "../components/PageLayout"

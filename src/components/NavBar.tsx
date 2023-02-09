@@ -8,7 +8,6 @@ import {
 } from "@fluentui/react-icons"
 import { signOut, useSession } from "next-auth/react"
 import Link from "next/link"
-import { useRouter } from "next/router"
 
 export default function NavBar() {
   const { data: session, status } = useSession()

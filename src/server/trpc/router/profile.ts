@@ -1,15 +1,15 @@
-import { z } from "zod"
+import {
+  profileInfoSchema,
+  updateAvatarSchema,
+  updateBioSchema,
+} from "../../../types/profile.schema"
 import { router, protectedProcedure } from "../trpc"
 
 export const profileRouter = router({
   profileInfo: protectedProcedure
-    .input(
-      z.object({
-        userId: z.string(),
-      })
-    )
+    .input(profileInfoSchema)
     .query(async ({ ctx, input }) => {
-      const { prisma, session } = ctx
+      const { prisma } = ctx
       const { userId } = input
 
       const profileInfo = await prisma.user.findUnique({
@@ -27,11 +27,7 @@ export const profileRouter = router({
     }),
 
   updateBio: protectedProcedure
-    .input(
-      z.object({
-        newBio: z.string(),
-      })
-    )
+    .input(updateBioSchema)
     .mutation(async ({ ctx, input }) => {
       const { prisma, session } = ctx
       const { newBio } = input
@@ -49,11 +45,7 @@ export const profileRouter = router({
     }),
 
   updateAvatar: protectedProcedure
-    .input(
-      z.object({
-        newAvatar: z.string(),
-      })
-    )
+    .input(updateAvatarSchema)
     .mutation(async ({ ctx, input }) => {
       const { prisma, session } = ctx
       const { newAvatar } = input

@@ -1,13 +1,14 @@
-import { z } from "zod"
+import {
+  acceptFriendSchema,
+  addFriendSchema,
+  declineFriendSchema,
+  profileIdSchema,
+} from "../../../types/friend.schema"
 import { router, protectedProcedure } from "../trpc"
 
 export const friendRouter = router({
   addFriend: protectedProcedure
-    .input(
-      z.object({
-        receiverId: z.string(),
-      })
-    )
+    .input(addFriendSchema)
     .mutation(async ({ ctx, input }) => {
       const { prisma, session } = ctx
       const { receiverId } = input
@@ -23,12 +24,7 @@ export const friendRouter = router({
     }),
 
   acceptFriend: protectedProcedure
-    .input(
-      z.object({
-        requestId: z.string(),
-        senderId: z.string(),
-      })
-    )
+    .input(acceptFriendSchema)
     .mutation(async ({ ctx, input }) => {
       const { prisma, session } = ctx
       const { requestId, senderId } = input
@@ -56,11 +52,7 @@ export const friendRouter = router({
     }),
 
   declineFriend: protectedProcedure
-    .input(
-      z.object({
-        requestId: z.string(),
-      })
-    )
+    .input(declineFriendSchema)
     .mutation(async ({ ctx, input }) => {
       const { prisma } = ctx
       const { requestId } = input
@@ -73,11 +65,7 @@ export const friendRouter = router({
     }),
 
   deleteFriend: protectedProcedure
-    .input(
-      z.object({
-        profileId: z.string(),
-      })
-    )
+    .input(profileIdSchema)
     .mutation(async ({ ctx, input }) => {
       const { prisma, session } = ctx
       const { profileId } = input
@@ -153,7 +141,7 @@ export const friendRouter = router({
   }),
 
   checkIfRequestSent: protectedProcedure
-    .input(z.object({ profileId: z.string() }))
+    .input(profileIdSchema)
     .query(async ({ ctx, input }) => {
       const { prisma, session } = ctx
       const { profileId } = input
@@ -180,7 +168,7 @@ export const friendRouter = router({
     }),
 
   checkIfRequestReceived: protectedProcedure
-    .input(z.object({ profileId: z.string() }))
+    .input(profileIdSchema)
     .query(async ({ ctx, input }) => {
       const { prisma, session } = ctx
       const { profileId } = input

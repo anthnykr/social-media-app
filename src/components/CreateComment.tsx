@@ -1,16 +1,7 @@
 import React, { useState } from "react"
 import { toast } from "react-hot-toast"
-import { z } from "zod"
+import { commentSchema } from "../types/comment.schema"
 import { trpc } from "../utils/trpc"
-
-export const commentSchema = z.object({
-  comment: z
-    .string({
-      required_error: "Comment text is required",
-    })
-    .min(1)
-    .max(300),
-})
 
 type Props = {
   postId: string

@@ -1,4 +1,3 @@
-import { AiFillLike } from "react-icons/ai"
 import Card from "./Card"
 
 function LoadingNF() {

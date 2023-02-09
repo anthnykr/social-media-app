@@ -1,5 +1,12 @@
-import { z } from "zod"
-import { postSchema } from "../../../components/CreatePost"
+import {
+  createCommentSchema,
+  getCommentsSchema,
+} from "../../../types/comment.schema"
+import {
+  newsFeedSchema,
+  postIdSchema,
+  postSchema,
+} from "../../../types/post.schema"
 
 import { router, protectedProcedure } from "../trpc"
 
@@ -21,17 +28,7 @@ export const postRouter = router({
     }),
 
   newsfeed: protectedProcedure
-    .input(
-      z.object({
-        cursor: z.string().nullish(),
-        limit: z.number().min(1).max(100).default(5),
-        who: z
-          .object({
-            id: z.string().optional(),
-          })
-          .optional(),
-      })
-    )
+    .input(newsFeedSchema)
     .query(async ({ ctx, input }) => {
       const { prisma, session } = ctx
       const { cursor, limit, who } = input
@@ -90,11 +87,7 @@ export const postRouter = router({
     }),
 
   like: protectedProcedure
-    .input(
-      z.object({
-        postId: z.string(),
-      })
-    )
+    .input(postIdSchema)
     .mutation(async ({ ctx, input }) => {
       const { prisma, session } = ctx
       const { postId } = input
@@ -110,11 +103,7 @@ export const postRouter = router({
     }),
 
   unlike: protectedProcedure
-    .input(
-      z.object({
-        postId: z.string(),
-      })
-    )
+    .input(postIdSchema)
     .mutation(async ({ ctx, input }) => {
       const { prisma, session } = ctx
       const { postId } = input
@@ -132,12 +121,7 @@ export const postRouter = router({
     }),
 
   createComment: protectedProcedure
-    .input(
-      z.object({
-        comment: z.string(),
-        postId: z.string(),
-      })
-    )
+    .input(createCommentSchema)
     .mutation(async ({ ctx, input }) => {
       const { prisma, session } = ctx
       const { comment, postId } = input
@@ -154,11 +138,7 @@ export const postRouter = router({
     }),
 
   getComments: protectedProcedure
-    .input(
-      z.object({
-        postId: z.string(),
-      })
-    )
+    .input(getCommentsSchema)
     .query(async ({ ctx, input }) => {
       const { prisma } = ctx
       const { postId } = input
@@ -188,11 +168,7 @@ export const postRouter = router({
     }),
 
   deletePost: protectedProcedure
-    .input(
-      z.object({
-        postId: z.string(),
-      })
-    )
+    .input(postIdSchema)
     .mutation(async ({ ctx, input }) => {
       const { prisma } = ctx
       const { postId } = input
