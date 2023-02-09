@@ -20,7 +20,7 @@ export default function NavBar() {
   const logout = () => {
     signOut({ callbackUrl: "/login" })
   }
-  // TODO: make nav bar a dropdown menu when using a small screen
+  // TODO: make nav bar a dropdown menu when using a small screen, also add the dropdown to large screens for less important tabs
   return (
     <div className="fixed z-50 flex h-[64px] w-screen items-center justify-between bg-black px-5 py-3 text-white">
       <p className="text-3xl font-semibold">KroTalk</p>
