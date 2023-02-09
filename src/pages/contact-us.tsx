@@ -40,7 +40,7 @@ const ContactUs: NextPage = () => {
 
   return (
     <PageLayout pageTitle="Profile">
-      <Card className="w-full gap-6 xl:flex-row">
+      <Card className="gap-6 xl:flex-row">
         <form onSubmit={handleSubmit(onSubmit)} className="w-full">
           <>
             <div className="flex w-full gap-6">

@@ -83,7 +83,7 @@ const Profile: NextPage = () => {
 
   return (
     <PageLayout pageTitle="Profile">
-      <Card className="w-full gap-6 xl:flex-row">
+      <Card className="gap-6 xl:flex-row">
         <section className="space-y-2">
           <div className="h-[200px] w-[200px]">
             <Image src={avatar} alt="" width={200} height={200} />

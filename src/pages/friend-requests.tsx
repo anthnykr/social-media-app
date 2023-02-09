@@ -78,7 +78,7 @@ const FriendRequests: NextPage = () => {
 
   return (
     <PageLayout pageTitle="Friend Requests">
-      <Card className="w-full gap-6">
+      <Card className="gap-6">
         <div className="space-y-2">
           <h1 className="text-2xl font-semibold">Friend Requests</h1>
           <p className="text-gray-500">
