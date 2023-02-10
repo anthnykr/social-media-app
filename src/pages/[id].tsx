@@ -203,7 +203,7 @@ const Profile: NextPage = () => {
                   className="rounded-md border border-gray-300 p-2"
                   value={tempBio}
                   rows={5}
-                  cols={85}
+                  cols={50}
                   maxLength={400}
                   placeholder="Write something about yourself..."
                 />
