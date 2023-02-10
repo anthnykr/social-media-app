@@ -89,14 +89,34 @@ const Profile: NextPage = () => {
     setLoading(false)
   }
 
-  let uploadAvatar = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]!
+  const uploadAvatar = async (e: React.ChangeEvent<HTMLInputElement>) => {
     setUploading(true)
 
-    try {
-      const url = await getSignedUrl({ name: file.name, type: file.type })
+    const file = e.target.files?.[0]
+    // check for file selected
+    if (!file) {
+      toast.error("No file selected")
+      setUploading(false)
+      return
+    }
+    // check for correct file type
+    if (
+      file.type !== "image/png" &&
+      file.type !== "image/jpeg" &&
+      file.type !== "image/jpg"
+    ) {
+      toast.error("Invalid file type")
+      setUploading(false)
+      return
+    }
 
-      const res = await fetch(url, {
+    try {
+      const url = await getSignedUrl({
+        name: `${userId}/${file.name}`,
+        type: file.type,
+      })
+
+      await fetch(url, {
         method: "PUT",
         body: file,
         headers: {
@@ -104,20 +124,7 @@ const Profile: NextPage = () => {
         },
       })
 
-      const imageUrlRes = await fetch(
-        `https://krotalk-avatar-images.s3.ap-southeast-2.amazonaws.com/${file.name}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": file.type,
-          },
-        }
-      )
-
-      const imageUrl = imageUrlRes.url
-      console.log(imageUrl)
-
-      updateAvatarMutation({ newAvatar: imageUrl })
+      await updateAvatarMutation({ fileName: `${userId}/${file.name}` })
       toast.success("Avatar updated")
     } catch (error) {
       toast.error("Error uploading image")
@@ -127,8 +134,8 @@ const Profile: NextPage = () => {
 
   return (
     <PageLayout pageTitle="Profile">
-      <Card className="gap-6 xl:flex-row">
-        <section className="space-y-2">
+      <Card className="items-center gap-6">
+        <section className="w-[200px] space-y-2">
           <div className="relative h-[200px] w-[200px]">
             {uploading ? (
               <div className="flex h-full w-full items-center justify-center">
@@ -160,27 +167,27 @@ const Profile: NextPage = () => {
             </>
           )}
           {userProfile && (
-            <form>
-              <button
-                type="button"
-                className={`redButton w-full py-1 ${
-                  showTextarea && `cursor-not-allowed hover:bg-red-400`
-                }`}
-                onClick={editBio}
-                disabled={showTextarea || loading}
-              >
-                Edit Bio
-              </button>
-            </form>
+            <button
+              type="button"
+              className={`redButton w-full py-1 ${
+                showTextarea && `cursor-not-allowed hover:bg-red-400`
+              }`}
+              onClick={editBio}
+              disabled={showTextarea || loading}
+            >
+              Edit Bio
+            </button>
           )}
           {!userProfile && <FriendButton profileId={id} />}
         </section>
 
-        <section className="flex w-full flex-col gap-6">
-          <div className="flex w-full items-center gap-40">
-            <div>
+        <section className="flex w-full flex-col items-center gap-6 ">
+          <div className="flex gap-40">
+            <div className="flex flex-col items-center">
               <p className="text-3xl font-semibold">{userName}</p>
-              <p className="text-gray-600">{`${numFriends} Friends`}</p>
+              <p className="text-gray-600">{`${numFriends} ${
+                numFriends === 1 ? "Friend" : "Friends"
+              }`}</p>
             </div>
           </div>
 
@@ -193,10 +200,11 @@ const Profile: NextPage = () => {
                   onChange={(e) => {
                     setTempBio(e.target.value)
                   }}
-                  className="w-full rounded-md border border-gray-300 p-2"
+                  className="rounded-md border border-gray-300 p-2"
                   value={tempBio}
                   rows={5}
-                  maxLength={300}
+                  cols={85}
+                  maxLength={400}
                   placeholder="Write something about yourself..."
                 />
                 <div className="space-x-2">

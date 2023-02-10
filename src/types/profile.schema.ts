@@ -9,7 +9,7 @@ export const updateBioSchema = z.object({
 })
 
 export const updateAvatarSchema = z.object({
-  newAvatar: z.string(),
+  fileName: z.string(),
 })
 
 export type profileInfoInput = z.infer<typeof profileInfoSchema>

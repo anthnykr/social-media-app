@@ -2,11 +2,11 @@ type Props = {
   children: React.ReactNode
   className?: string
 }
-// TODO: resizing with screen
+
 const Card = ({ children, className }: Props) => {
   return (
     <div
-      className={`mt-6 flex h-full w-2/5 flex-col rounded-xl bg-white p-6 shadow-md ${className}`}
+      className={`mt-6 flex h-full w-full flex-col rounded-xl bg-white p-6 shadow-md sm:w-4/5 md:w-2/3 lg:w-1/2 xl:w-2/5 ${className}`}
     >
       {children}
     </div>

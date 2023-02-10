@@ -90,7 +90,6 @@ function Post({ post }: Props) {
               onClick={deletePost}
               className="cursor-pointer text-red-400"
             />
-            // TODO: add a modal confirmation for deletion (idea - x button shows confirm/cancel buttons which trigger deletePost mutation)
           )}
         </div>
 

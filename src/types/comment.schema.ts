@@ -6,7 +6,7 @@ export const commentSchema = z.object({
       required_error: "Comment text is required",
     })
     .min(1)
-    .max(300),
+    .max(200),
 })
 
 export const createCommentSchema = z.object({
@@ -16,7 +16,7 @@ export const createCommentSchema = z.object({
       required_error: "Comment text is required",
     })
     .min(1)
-    .max(300),
+    .max(200),
 })
 
 export const getCommentsSchema = z.object({

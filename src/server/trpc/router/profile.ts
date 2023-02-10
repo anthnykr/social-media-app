@@ -66,8 +66,9 @@ export const profileRouter = router({
     .input(updateAvatarSchema)
     .mutation(async ({ ctx, input }) => {
       const { prisma, session } = ctx
-      const { newAvatar } = input
+      const { fileName } = input
 
+      const newAvatar = `https://${process.env.BUCKET_NAME}.s3.${process.env.UPLOAD_REGION}.amazonaws.com/${fileName}`
       const userId = session.user.id
 
       return await prisma.user.update({
