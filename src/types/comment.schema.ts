@@ -23,8 +23,14 @@ export const getCommentsSchema = z.object({
   postId: z.string(),
 })
 
+export const commentIdSchema = z.object({
+  commentId: z.string(),
+})
+
 export type commentInput = z.infer<typeof commentSchema>
 
 export type createCommentInput = z.infer<typeof createCommentSchema>
 
 export type getCommentsInput = z.infer<typeof getCommentsSchema>
+
+export type commentIdInput = z.infer<typeof commentIdSchema>

@@ -36,6 +36,21 @@ const Profile: NextPage = () => {
   const [showTextarea, setShowTextarea] = useState(false)
   const [tempBio, setTempBio] = useState("")
   const [loading, setLoading] = useState(false)
+  const [uploading, setUploading] = useState(false)
+
+  const getSignedUrl = trpc.profile.getSignedUrl.useMutation().mutateAsync
+
+  const updateAvatarMutation = trpc.profile.updateAvatar.useMutation({
+    onSuccess: () => {
+      utils.profile.profileInfo.invalidate()
+      utils.post.newsfeed.invalidate()
+      utils.post.getComments.invalidate()
+    },
+  }).mutateAsync
+
+  const { data: numFriends } = trpc.profile.getNumFriends.useQuery({
+    userId: id,
+  })
 
   // Obtaining session and pushing to login page if no session
   const { data: session, status } = useSession()
@@ -65,7 +80,6 @@ const Profile: NextPage = () => {
   // Updates the bio in the database
   const updateBio = async () => {
     setLoading(true)
-
     try {
       await bioMutation({ newBio: tempBio })
       toast.success("Bio updated")
@@ -75,48 +89,85 @@ const Profile: NextPage = () => {
     setLoading(false)
   }
 
-  // TODO: change avatar feature
-  const editAvatar = (target: HTMLInputElement) => {
-    const newAvatar = target.files?.[0]
-    console.log(newAvatar)
+  let uploadAvatar = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]!
+    setUploading(true)
+
+    try {
+      const url = await getSignedUrl({ name: file.name, type: file.type })
+
+      const res = await fetch(url, {
+        method: "PUT",
+        body: file,
+        headers: {
+          "Content-Type": file.type,
+        },
+      })
+
+      const imageUrlRes = await fetch(
+        `https://krotalk-avatar-images.s3.ap-southeast-2.amazonaws.com/${file.name}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": file.type,
+          },
+        }
+      )
+
+      const imageUrl = imageUrlRes.url
+      console.log(imageUrl)
+
+      updateAvatarMutation({ newAvatar: imageUrl })
+      toast.success("Avatar updated")
+    } catch (error) {
+      toast.error("Error uploading image")
+    }
+    setUploading(false)
   }
 
   return (
     <PageLayout pageTitle="Profile">
       <Card className="gap-6 xl:flex-row">
         <section className="space-y-2">
-          <div className="h-[200px] w-[200px]">
-            <Image src={avatar} alt="" width={200} height={200} />
+          <div className="relative h-[200px] w-[200px]">
+            {uploading ? (
+              <div className="flex h-full w-full items-center justify-center">
+                <Spinner />
+              </div>
+            ) : (
+              <Image src={avatar} alt="Profile Picture" fill />
+            )}
           </div>
+
           {userProfile && (
-            <form>
+            <>
               <label
+                htmlFor="imageUpload"
                 className={`blueButton inline-block w-full py-1 text-center ${
                   showTextarea && `cursor-not-allowed hover:bg-blue-400`
                 }`}
-                htmlFor="changeAvatar"
               >
                 Change Avatar
               </label>
               <input
                 type="file"
-                id="changeAvatar"
-                className="hidden"
-                accept="image/png, image/jpeg"
-                onChange={(event) => editAvatar(event.target)}
-                disabled={showTextarea}
+                id="imageUpload"
+                accept="image/png, image/jpeg, image/jpg"
+                onChange={uploadAvatar}
+                disabled={showTextarea || uploading}
+                hidden
               />
-            </form>
+            </>
           )}
           {userProfile && (
             <form>
               <button
                 type="button"
                 className={`redButton w-full py-1 ${
-                  showTextarea && `cursor-not-allowed hover:bg-gray-200`
+                  showTextarea && `cursor-not-allowed hover:bg-red-400`
                 }`}
                 onClick={editBio}
-                disabled={showTextarea}
+                disabled={showTextarea || loading}
               >
                 Edit Bio
               </button>
@@ -129,8 +180,7 @@ const Profile: NextPage = () => {
           <div className="flex w-full items-center gap-40">
             <div>
               <p className="text-3xl font-semibold">{userName}</p>
-              <p className="text-gray-600">0 Friends</p>
-              {/* TODO: get number of friends */}
+              <p className="text-gray-600">{`${numFriends} Friends`}</p>
             </div>
           </div>
 

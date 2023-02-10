@@ -1,4 +1,5 @@
 import {
+  commentIdSchema,
   createCommentSchema,
   getCommentsSchema,
 } from "../../../types/comment.schema"
@@ -146,7 +147,7 @@ export const postRouter = router({
       const comments = await prisma.comment.findMany({
         orderBy: [
           {
-            createdAt: "desc",
+            createdAt: "asc",
           },
         ],
         where: {
@@ -188,6 +189,19 @@ export const postRouter = router({
       return await prisma.post.delete({
         where: {
           id: postId,
+        },
+      })
+    }),
+
+  deleteComment: protectedProcedure
+    .input(commentIdSchema)
+    .mutation(async ({ ctx, input }) => {
+      const { prisma } = ctx
+      const { commentId } = input
+
+      return await prisma.comment.delete({
+        where: {
+          id: commentId,
         },
       })
     }),

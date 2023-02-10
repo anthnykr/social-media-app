@@ -2,7 +2,7 @@ type Props = {
   children: React.ReactNode
   className?: string
 }
-
+// TODO: resizing with screen
 const Card = ({ children, className }: Props) => {
   return (
     <div

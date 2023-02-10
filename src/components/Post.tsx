@@ -63,13 +63,14 @@ function Post({ post }: Props) {
           <div className="flex items-center">
             {post.author.image && (
               <Link href={`/${post.author.id}`}>
-                <Image
-                  src={post.author.image}
-                  alt="Profile picture"
-                  width={36}
-                  height={36}
-                  className="rounded-full"
-                />
+                <div className="relative h-[36px] w-[36px]">
+                  <Image
+                    src={post.author.image}
+                    alt="Profile picture"
+                    className="rounded-full"
+                    fill
+                  />
+                </div>
               </Link>
             )}
 

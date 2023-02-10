@@ -18,6 +18,8 @@ const config = {
       "lh3.googleusercontent.com",
       "platform-lookaside.fbsbx.com",
       "avatars.githubusercontent.com",
+      `${process.env.BUCKET_NAME}.s3.amazonaws.com`,
+      `${process.env.BUCKET_NAME}.s3.${process.env.UPLOAD_REGION}.amazonaws.com`,
     ],
   },
 }

@@ -2,6 +2,7 @@ import React, { useState } from "react"
 import { toast } from "react-hot-toast"
 import { commentSchema } from "../types/comment.schema"
 import { trpc } from "../utils/trpc"
+import Spinner from "./Spinner"
 
 type Props = {
   postId: string
@@ -9,6 +10,7 @@ type Props = {
 
 function CreateComment({ postId }: Props) {
   const [comment, setComment] = useState("")
+  const [loading, setLoading] = useState(false)
 
   const utils = trpc.useContext()
 
@@ -20,6 +22,7 @@ function CreateComment({ postId }: Props) {
   })
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    setLoading(true)
     e.preventDefault()
 
     try {
@@ -28,6 +31,7 @@ function CreateComment({ postId }: Props) {
     } catch (error) {
       toast.error("Error posting comment")
     }
+    setLoading(false)
   }
 
   return (
@@ -38,12 +42,20 @@ function CreateComment({ postId }: Props) {
         value={comment}
         rows={1}
         placeholder="Write a comment here..."
+        disabled={loading}
       />
       <button
         type="submit"
-        className="rounded-md bg-white px-3 py-2 shadow-md hover:shadow-lg"
+        className="w-[57px] rounded-md bg-white px-3 py-2 shadow-md hover:shadow-lg"
+        disabled={loading}
       >
-        Post
+        {loading ? (
+          <div className="flex items-center justify-center px-2">
+            <Spinner />
+          </div>
+        ) : (
+          <span>Post</span>
+        )}
       </button>
     </form>
   )
